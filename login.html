@@ -12,22 +12,13 @@
 </head>
 <body>
     <div style="margin: auto; width: 400px" >
-        <h1>Register</h1>
-
-        First name<span style="color:red">*</span>:
-        <input type='text' name='message' id="fname"><br><br>
-
-        Last name<span style="color:red">*</span>:
-        <input type='text' name='message' id="lname"><br><br>
+        <h1>Login</h1>
 
         Email<span style="color:red">*</span>:
         <input type='text' name='message' id="email"><br><br>
 
         Password<span style="color:red">*</span>:
         <input type='text' name='message' id="password"><br><br>
-
-        Contact number:
-        <input type='text' name='message' id="phone"><br><br>
 
         <input type='button' value='Submit' name='check' onclick="processInput()">
 
@@ -38,27 +29,49 @@
 
     <script>
         function processInput() {
-            let message = ""
             
-
-            fname = $("#fname").val()
-            lname = $("#lname").val()
             email = $("#email").val()
             password = $("#password").val()
-            phone = $("#phone").val()
 
-            if (fname=="" || lname=="" || email == "" || password=="") {
-                console.log("hi")
-                message = "Fill in all mandatory fields"
-            }
+            
 
-            document.getElementById("msg").innerText = message
+            $(async()=>{
+                serviceURL = "http://127.0.0.1:5000/api/login";
 
-            console.log(fname)
-            console.log(lname)
-            console.log(email)
-            console.log(password)
-            console.log(phone)
+                console.log(serviceURL)
+
+                try {
+                    // connection to service is successful
+                    console.log(JSON.stringify
+                            ({
+                                email: email,
+                                password: password
+                            }))
+                    const response =
+                    await fetch(
+                    serviceURL, { 
+                        method: 'POST',
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify
+                            ({
+                                email: email,
+                                password: password
+                            })
+                        }
+                    );
+
+                    const result = await response.json();
+                    localStorage.setItem('token', JSON.stringify(result))
+
+                    console.log(result)
+
+                    
+
+                } catch {
+
+                }
+
+            })
         }
     </script>
 </body>

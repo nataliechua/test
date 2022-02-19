@@ -1,7 +1,16 @@
+const bodyParser = require('body-parser');
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
+
 
 const app = express();
+app.use(cors({
+    origin: '*'
+}));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Protected route
 app.post('/api/user', verifyToken, (req, res) => {  
@@ -20,13 +29,12 @@ app.post('/api/user', verifyToken, (req, res) => {
 app.post('/api/login', (req,res)=>{
 
     // Authentication code goes here
+    const email = req.body.email;
+    const password = req.body.password;
 
     const user = {
-        fname: 'Jeff',
-        lname: 'Bezos',
-        email: 'jeffbezos@gmail.com',
-        password: 'ieatchildren',
-        phone: '999'
+        email,
+        password
     };
     
     jwt.sign({user}, 'secretkey', (err,token)=>{
